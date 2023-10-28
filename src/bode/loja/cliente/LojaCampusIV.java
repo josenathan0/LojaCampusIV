@@ -74,7 +74,6 @@ public class LojaCampusIV {
                     menuEntregaPedido(sc, fachada);
                     break;
                 case OPCAO_MODO_OPERACAO_ENCERRAR_VENDAS:
-                    //só encerra se todos os pedidos foram ou finalizados ou cancelados
                     menuEncerraVendas(fachada);
                     break;
                 case OPCAO_MODO_OPERACAO_ESTATISTICAS_VENDAS:
@@ -267,7 +266,7 @@ public class LojaCampusIV {
             if(cupom.toUpperCase().trim().equals(TipoDeCupom.values()[i].name()))
                 return TipoDeCupom.values()[i];
         }
-        return TipoDeCupom.values()[0]; //retorna o cupom que não dá desconto - realiza calculo normal da compra
+        return TipoDeCupom.values()[0];
     }
 
     private static void removeItemDoPedido(Scanner sc, Fachada fachada, int numeroDoPedido) throws PedidoNaoExisteException {

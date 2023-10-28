@@ -7,7 +7,6 @@ import java.util.List;
 public class CupomSemDesconto implements CupomDescontoBode {
     @Override
     public double calcularDesconto(double valorOriginal) {
-        // Nenhum desconto, retorna o valor original
         return valorOriginal;
     }
 

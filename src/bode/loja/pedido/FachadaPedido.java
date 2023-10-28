@@ -102,12 +102,12 @@ public class FachadaPedido {
     public void encerraVendas() {
         for (Pedido pedido : pedidos) {
             if (pedido.getStatus() != StatusPedido.FINALIZADO && pedido.getStatus() != StatusPedido.CANCELADO) {
-                return; // Não é possível encerrar as vendas enquanto houver pedidos não finalizados ou cancelados.
+                return;
             }
         }
-        // Todas as vendas foram finalizadas ou canceladas.
-        pedidos.clear(); // Limpa a lista de pedidos.
-        proximoNumeroPedido = 1; // Reseta o número do próximo pedido.
+
+        pedidos.clear();
+        proximoNumeroPedido = 1;
     }
 
     public List<Pedido> getPedidos() {

@@ -30,7 +30,6 @@ public class Fachada {
         novoPedido.setNumeroPedido(proximoNumeroPedido);
         proximoNumeroPedido++;
         pedidos.add(novoPedido);
-        // Adicione o pedido à fila de preparo quando ele for criado
         filaPreparo.add(novoPedido);
         return novoPedido.getNumeroPedido();
     }
@@ -132,7 +131,7 @@ public class Fachada {
         for (Pedido pedido : pedidos) {
             if (pedido.getStatus() == StatusPedido.EM_PREPARO) {
                 existemPedidosEmPreparo = true;
-                break;  // Se encontrou um pedido em preparo, não precisa verificar os outros
+                break;
             }
         }
 
@@ -140,7 +139,6 @@ public class Fachada {
             throw new ExistemPedidosAbertosException("A loja não pode ser fechada porque existem pedidos iniciados e não concluídos.");
         }
 
-        // Só imprime "Vendas fechadas" quando não há pedidos em preparo
         System.out.println("Vendas fechadas.");
     }
 
@@ -162,7 +160,7 @@ public class Fachada {
                 throw new PedidoNaoEstaPreparadoException();
             }
             pedido.setStatus(StatusPedido.ENTREGUE);
-            // Adicione o próximo pedido à fila de preparo
+
             Pedido proximo = filaPreparo.poll();
             if (proximo != null) {
                 proximo.setStatus(StatusPedido.EM_PREPARO);
