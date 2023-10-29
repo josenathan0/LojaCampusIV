@@ -1,5 +1,6 @@
-package bode.loja.cliente;
+package bode.loja;
 
+import bode.loja.cliente.Fachada;
 import bode.loja.cupom.TipoDeCupom;
 import bode.loja.excecoes.ExistemPedidosAbertosException;
 import bode.loja.excecoes.NaoHaPedidosAPreparar;

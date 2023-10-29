@@ -224,7 +224,7 @@ public class Fachada {
 
         for (Pedido pedido : pedidos) {
             if (pedido.getStatus() == StatusPedido.FECHADO) {
-                numeroTotalPedidosConcluidos++;
+                ++numeroTotalPedidosConcluidos;
                 totalVendas += pedido.getValorTotal();
             }
         }
