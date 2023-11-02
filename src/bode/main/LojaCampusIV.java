@@ -1,4 +1,4 @@
-package bode.loja;
+package bode.main;
 
 import bode.loja.cliente.Fachada;
 import bode.loja.cupom.TipoDeCupom;
@@ -31,6 +31,8 @@ public class LojaCampusIV {
     private static final int OPCAO_MODO_OPERACAO_ESTATISTICAS_VENDAS = 6;
 
     private static int OPCAO_SAIR = 0;
+    private static final String SENHA_MODO_OPERACAO = "1234";
+
 
     public static void main(String[] args) throws NaoHaPedidosAPreparar, PedidoNaoExisteException {
         Fachada fachada = new Fachada();
@@ -55,7 +57,10 @@ public class LojaCampusIV {
     }
 
     private static void entraMenuModoOperacao(Scanner sc, Fachada fachada) throws NaoHaPedidosAPreparar {
+        System.out.print("Digite a senha para entrar no modo de operação: ");
+        String senhaDigitada = String.valueOf(sc.nextInt());
 
+        if (senhaDigitada.equals(SENHA_MODO_OPERACAO)) {
         int opcao;
         do {
             System.out.println(menuModoFuncionario());
@@ -82,6 +87,9 @@ public class LojaCampusIV {
                     break;
             }
         } while(opcao != OPCAO_VOLTAR_TELA_MODO);
+        } else {
+            System.out.println("Senha incorreta. Acesso ao modo de operação negado.");
+        }
     }
 
     private static void exibirPedidosEmPreparo(List<Pedido> pedidosEmPreparo) {
@@ -128,9 +136,9 @@ public class LojaCampusIV {
     public static String telaModoDeOperacao() {
         String str = "___________________________________\n";
         str += "Escolha o modo de operação:\n";
-        str += "1 - modo cliente\n";
-        str += "2 - modo operacao\n";
-        str += "0 - para sair\n";
+        str += "1 - Modo cliente\n";
+        str += "2 - Modo operacao\n";
+        str += "0 - Para sair\n";
         return str;
     }
 
@@ -344,7 +352,7 @@ public class LojaCampusIV {
     private static String mensagemDespedidaModoCliente() {
         String str = "___________________________________\n";
         str += "Pedido realizado\n";
-        str += "Pegue seu pedido no balcao - será chamado pelo nome\n";
+        str += "Pegue seu pedido no balcão\n";
         return str;
     }
 }

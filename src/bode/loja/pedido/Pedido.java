@@ -76,7 +76,25 @@ public class Pedido {
         }
         return valorTotal;
     }
+    public static List<Pedido> getPedidosEmAberto(List<Pedido> pedidos) {
+        List<Pedido> pedidosEmAberto = new ArrayList<>();
+        for (Pedido pedido : pedidos) {
+            if (pedido.getStatus() == StatusPedido.AGUARDANDO_ITENS) {
+                pedidosEmAberto.add(pedido);
+            }
+        }
+        return pedidosEmAberto;
+    }
 
+    public static List<Pedido> getPedidosCancelados(List<Pedido> pedidos) {
+        List<Pedido> pedidosCancelados = new ArrayList<>();
+        for (Pedido pedido : pedidos) {
+            if (pedido.getStatus() == StatusPedido.CANCELADO) {
+                pedidosCancelados.add(pedido);
+            }
+        }
+        return pedidosCancelados;
+    }
     public void fechar() {
         status = StatusPedido.FECHADO;
     }

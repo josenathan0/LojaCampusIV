@@ -1,6 +1,6 @@
 package bode.loja.cliente;
 
-import bode.loja.PedidoService;
+import bode.loja.pedido.PedidoService;
 import bode.loja.cupom.TipoDeCupom;
 import bode.loja.excecoes.ExistemPedidosAbertosException;
 import bode.loja.excecoes.NaoHaPedidosAPreparar;
@@ -16,11 +16,6 @@ public class Fachada {
     public Fachada() {
         this.pedidoService = new PedidoService();
     }
-
-    public int criarPedido(String nomeCliente) {
-        return pedidoService.criaPedido(nomeCliente);
-    }
-
     public List<TipoDeCupom> getCuponsElegiveis(int numeroPedido) throws PedidoNaoExisteException {
         return pedidoService.getCuponsElegiveis(numeroPedido);
     }
@@ -36,7 +31,6 @@ public class Fachada {
     public List<Pedido> getPedidosCancelados() {
         return pedidoService.getPedidosCancelados();
     }
-
     public String getEstatisticasDoDia() {
         return pedidoService.getEstatisticasDoDia();
     }

@@ -1,4 +1,4 @@
-package bode.loja;
+package bode.loja.pedido;
 
 import bode.loja.cupom.CupomItemMaisBaratoGratis;
 import bode.loja.cupom.CupomPague3ELeve4Bode;
@@ -7,9 +7,6 @@ import bode.loja.excecoes.ExistemPedidosAbertosException;
 import bode.loja.excecoes.NaoHaPedidosAPreparar;
 import bode.loja.excecoes.PedidoNaoEstaPreparadoException;
 import bode.loja.excecoes.PedidoNaoExisteException;
-import bode.loja.pedido.ItemPedido;
-import bode.loja.pedido.Pedido;
-import bode.loja.pedido.StatusPedido;
 import bode.produtos.ProdutoDaLoja;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,14 +17,16 @@ public class PedidoService {
     private List<Pedido> pedidos;
     private Queue<Pedido> filaPreparo;
     private int proximoNumeroPedido;
-    public static final int CUPOM_PAGUE3_LEVE4 = 1;
-    public static final int CUPOM_ITEM_MAIS_BARATO_GRATIS = 2;
-    public static final int CUPOM_SEM_DESCONTO = 3;
+    private List<Pedido> pedidosEmAberto;
+    private List<Pedido> pedidosCancelados;
 
     public PedidoService() {
         this.pedidos = new ArrayList<>();
         this.filaPreparo = new LinkedList<>();
         this.proximoNumeroPedido = 1;
+        this.pedidosEmAberto = new ArrayList<>();
+        this.pedidosCancelados = new ArrayList<>();
+
     }
 
     public int criaPedido(String nomeCliente) {
@@ -105,24 +104,6 @@ public class PedidoService {
             throw new PedidoNaoExisteException("Pedido com número " + numeroPedido + " não encontrado.");
         }
     }
-    public void fecharPedido(int numeroPedido) throws PedidoNaoExisteException {
-        Pedido pedido = getPedido(numeroPedido);
-        if (pedido != null) {
-            pedido.fechar();
-        } else {
-            throw new PedidoNaoExisteException("Pedido com número " + numeroPedido + " não encontrado.");
-        }
-    }
-
-    public void cancelarPedido(int numeroPedido) throws PedidoNaoExisteException {
-        Pedido pedido = getPedido(numeroPedido);
-        if (pedido != null) {
-            pedido.cancelar();
-        } else {
-            throw new PedidoNaoExisteException("Pedido com número " + numeroPedido + " não encontrado.");
-        }
-    }
-
     public List<Pedido> getPedidosEmPreparo() {
         List<Pedido> pedidosEmPreparo = new ArrayList<>();
         for (Pedido pedido : pedidos) {
@@ -132,8 +113,6 @@ public class PedidoService {
         }
         return pedidosEmPreparo;
     }
-
-
     public List<Pedido> getPedidosCancelados() {
         List<Pedido> pedidosCancelados = new ArrayList<>();
         for (Pedido pedido : pedidos) {
@@ -143,6 +122,7 @@ public class PedidoService {
         }
         return pedidosCancelados;
     }
+
 
     public void encerraVendas() throws ExistemPedidosAbertosException {
         boolean existemPedidosEmPreparo = false;
@@ -223,10 +203,6 @@ public class PedidoService {
         }
     }
 
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
     public void adicionaCupom(int numeroPedido, TipoDeCupom tipoDeCupom) throws PedidoNaoExisteException {
         Pedido pedido = getPedido(numeroPedido);
         if (pedido != null) {
@@ -264,5 +240,8 @@ public class PedidoService {
             str += produto.getPreco() + "\n";
         }
         return str;
+    }
+
+    public void cancelarPedido(int numeroDoPedido) {
     }
 }
