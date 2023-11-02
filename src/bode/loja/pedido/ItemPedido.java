@@ -15,10 +15,6 @@ public class ItemPedido {
         return produto;
     }
 
-    public int getQuantidade() {
-        return quantidade;
-    }
-
     public double getSubtotal() {
         return produto.getPreco() * quantidade;
     }

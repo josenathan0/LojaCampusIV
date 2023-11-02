@@ -48,7 +48,7 @@ public class Fachada {
     }
 
     public void cancelarPedido(int numeroDoPedido) throws PedidoNaoExisteException {
-        pedidoService.cancelarPedido(numeroDoPedido);
+        pedidoService.cancelarPedido();
     }
 
     public void adicionaCupom(int numeroDoPedido, TipoDeCupom validaCupom) throws PedidoNaoExisteException {
@@ -60,7 +60,7 @@ public class Fachada {
     }
 
     public void fecharPedido(int numeroDoPedido) throws PedidoNaoExisteException {
-        pedidoService.cancelarPedido(numeroDoPedido);
+        pedidoService.cancelarPedido();
     }
 
     public String getItensDoPedidoToString(int numeroDoPedido) throws PedidoNaoExisteException {

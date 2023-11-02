@@ -8,10 +8,12 @@ import bode.loja.excecoes.NaoHaPedidosAPreparar;
 import bode.loja.excecoes.PedidoNaoEstaPreparadoException;
 import bode.loja.excecoes.PedidoNaoExisteException;
 import bode.produtos.ProdutoDaLoja;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class PedidoService {
     private List<Pedido> pedidos;
@@ -19,6 +21,8 @@ public class PedidoService {
     private int proximoNumeroPedido;
     private List<Pedido> pedidosEmAberto;
     private List<Pedido> pedidosCancelados;
+    private List<Pedido> pedidosFinalizadosDoDia;
+
 
     public PedidoService() {
         this.pedidos = new ArrayList<>();
@@ -26,6 +30,7 @@ public class PedidoService {
         this.proximoNumeroPedido = 1;
         this.pedidosEmAberto = new ArrayList<>();
         this.pedidosCancelados = new ArrayList<>();
+        this.pedidosFinalizadosDoDia = new ArrayList<>();
 
     }
 
@@ -125,22 +130,25 @@ public class PedidoService {
 
 
     public void encerraVendas() throws ExistemPedidosAbertosException {
-        boolean existemPedidosEmPreparo = false;
+        if (confirmarEncerramentoVendas()) {
+            boolean existemPedidosEmPreparo = false;
 
-        for (Pedido pedido : pedidos) {
-            if (pedido.getStatus() == StatusPedido.EM_PREPARO) {
-                existemPedidosEmPreparo = true;
-                break;
+            for (Pedido pedido : pedidos) {
+                if (pedido.getStatus() == StatusPedido.EM_PREPARO) {
+                    existemPedidosEmPreparo = true;
+                    break;
+                }
             }
-        }
 
-        if (existemPedidosEmPreparo) {
-            throw new ExistemPedidosAbertosException("A loja não pode ser fechada porque existem pedidos iniciados e não concluídos.");
-        }
+            if (existemPedidosEmPreparo) {
+                throw new ExistemPedidosAbertosException("A loja não pode ser fechada porque existem pedidos iniciados e não concluídos.");
+            }
 
-        System.out.println("Vendas fechadas.");
+            System.out.println("Vendas fechadas.");
+        } else {
+            System.out.println("Encerramento de vendas cancelado.");
+        }
     }
-
 
 
     public int preparaProximoPedido() throws NaoHaPedidosAPreparar {
@@ -216,32 +224,35 @@ public class PedidoService {
     public String getEstatisticasDoDia() {
         double totalVendas = 0.0;
         int numeroTotalPedidosConcluidos = 0;
+        int quantidadeItensVendidos = 0;
+
+        Date dataAtual = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         for (Pedido pedido : pedidos) {
             if (pedido.getStatus() == StatusPedido.FECHADO || pedido.getStatus() == StatusPedido.ENTREGUE) {
                 numeroTotalPedidosConcluidos++;
                 totalVendas += pedido.getValorTotal();
+                quantidadeItensVendidos += pedido.getItens().size();
             }
         }
 
         StringBuilder estatisticas = new StringBuilder();
-        estatisticas.append("Estatísticas de vendas do dia:\n");
+        estatisticas.append("Estatísticas de vendas do dia (").append(sdf.format(dataAtual)).append("):\n");
         estatisticas.append("Total de vendas: R$ ").append(totalVendas).append("\n");
         estatisticas.append("Número de pedidos concluídos: ").append(numeroTotalPedidosConcluidos).append("\n");
+        estatisticas.append("Quantidade de itens vendidos: ").append(quantidadeItensVendidos).append("\n");
 
         return estatisticas.toString();
     }
+    private boolean confirmarEncerramentoVendas() {
+        System.out.print("Deseja realmente encerrar as vendas do dia? (S para sim, N para não): ");
+        Scanner scanner = new Scanner(System.in);
+        String resposta = scanner.next();
 
-    public static String telaMenu() {
-        String str = "___________________________________\n";
-        for (ProdutoDaLoja produto : ProdutoDaLoja.values()) {
-            str += produto.getCodigo() + " - ";
-            str += produto.getDescricao() + " - R$ ";
-            str += produto.getPreco() + "\n";
-        }
-        return str;
+        return resposta.equalsIgnoreCase("S");
     }
 
-    public void cancelarPedido(int numeroDoPedido) {
+    public void cancelarPedido() {
     }
 }
