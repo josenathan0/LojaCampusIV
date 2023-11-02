@@ -12,6 +12,6 @@ public class CupomSemDesconto implements CupomDescontoBode {
 
     @Override
     public double calcularDesconto(double valorOriginal, List<ItemPedido> itens) {
-        return 0;
+        return valorOriginal;
     }
 }

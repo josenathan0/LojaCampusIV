@@ -32,7 +32,7 @@ public class LojaCampusIV {
 
     private static int OPCAO_SAIR = 0;
 
-    public static void main(String[] args) throws NaoHaPedidosAPreparar {
+    public static void main(String[] args) throws NaoHaPedidosAPreparar, PedidoNaoExisteException {
         Fachada fachada = new Fachada();
         Scanner sc = new Scanner(System.in);
 
@@ -185,7 +185,7 @@ public class LojaCampusIV {
         return str;
     }
 
-    private static int entraMenuModoCliente(Scanner sc, Fachada fachada) {
+    private static int entraMenuModoCliente(Scanner sc, Fachada fachada) throws PedidoNaoExisteException {
         int opcao = -1;
         System.out.println(menuModoCliente());
         opcao = recebeInteiroNoIntervalo(sc, OPCAO_VOLTAR_TELA_MODO, OPCAO_MODO_CLIENTE_FAZER_PEDIDO);
@@ -238,22 +238,33 @@ public class LojaCampusIV {
     }
 
 
-    private static void menuFecharPedido(Scanner sc, Fachada fachada, int numeroDoPedido) {
+    private static void menuFecharPedido(Scanner sc, Fachada fachada, int numeroDoPedido) throws PedidoNaoExisteException {
         System.out.println("Deseja adicionar algum cupom ao pedido?");
-        System.out.println(" 0 - Sim \n 1 - Não");
+        System.out.println("0 - Sim\n1 - Não");
         int resposta = recebeInteiroNoIntervalo(sc, 0, 1);
         String cupom = "";
-        if(resposta == 0) {
-            System.out.println("Informe o código do cupom");
-            cupom = sc.next();
+        if (resposta == 0) {
+            List<TipoDeCupom> cuponsElegiveis = fachada.getCuponsElegiveis(numeroDoPedido);
+            System.out.println("Cupons elegíveis:");
+            for (TipoDeCupom cupomElegivel : cuponsElegiveis) {
+                System.out.println(cupomElegivel.name() + " (Código " + cupomElegivel.ordinal() + ")");
+            }
+            System.out.print("Digite o código do cupom desejado (ou 0 para nenhum cupom): ");
+            int codigoCupomEscolhido = recebeInteiroNoIntervalo(sc, 0, cuponsElegiveis.size());
+            if (codigoCupomEscolhido != 0) {
+                TipoDeCupom cupomEscolhido = cuponsElegiveis.get(codigoCupomEscolhido - 1);
+                double valorComDesconto = fachada.aplicarCupom(numeroDoPedido, cupomEscolhido);
+                System.out.println("Cupom " + cupomEscolhido.name() + " aplicado. Valor total: R$ " + valorComDesconto);
+            }
         }
+
         try {
             fechaPedido(fachada, numeroDoPedido, cupom);
         } catch (PedidoNaoExisteException e) {
             System.out.println("Pedido de código " + numeroDoPedido + " não existe.");
         }
-
     }
+
 
     private static void fechaPedido(Fachada fachada, int numeroDoPedido, String cupom) throws PedidoNaoExisteException {
         fachada.adicionaCupom(numeroDoPedido, validaCupom(cupom));

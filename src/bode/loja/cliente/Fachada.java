@@ -21,6 +21,14 @@ public class Fachada {
         return pedidoService.criaPedido(nomeCliente);
     }
 
+    public List<TipoDeCupom> getCuponsElegiveis(int numeroPedido) throws PedidoNaoExisteException {
+        return pedidoService.getCuponsElegiveis(numeroPedido);
+    }
+
+    public double aplicarCupom(int numeroPedido, TipoDeCupom tipoDeCupom) throws PedidoNaoExisteException {
+        return pedidoService.aplicarCupom(numeroPedido, tipoDeCupom);
+    }
+
     public List<Pedido> getPedidosEmPreparo() {
         return pedidoService.getPedidosEmPreparo();
     }
@@ -33,26 +41,21 @@ public class Fachada {
         return pedidoService.getEstatisticasDoDia();
     }
 
-
     public void encerraVendas() throws ExistemPedidosAbertosException {
         pedidoService.encerraVendas();
     }
-
 
     public int preparaProximoPedido() throws NaoHaPedidosAPreparar {
         return pedidoService.preparaProximoPedido();
     }
 
-
     public void entregarPedido(int numeroDoPedido) throws PedidoNaoEstaPreparadoException, PedidoNaoExisteException {
         pedidoService.entregarPedido(numeroDoPedido);
     }
 
-
     public void cancelarPedido(int numeroDoPedido) throws PedidoNaoExisteException {
         pedidoService.cancelarPedido(numeroDoPedido);
     }
-
 
     public void adicionaCupom(int numeroDoPedido, TipoDeCupom validaCupom) throws PedidoNaoExisteException {
         pedidoService.adicionaCupom(numeroDoPedido, validaCupom);
@@ -70,11 +73,9 @@ public class Fachada {
         return pedidoService.getItensDoPedidoToString(numeroDoPedido);
     }
 
-
     public void adicionarItemAoPedido(int numeroDoPedido, int item) throws PedidoNaoExisteException {
         pedidoService.adicionarItemAoPedido(numeroDoPedido, item);
     }
-
 
     public boolean removeItemDoPedido(int numeroDoPedido, int item) {
         return pedidoService.removeItemDoPedido(numeroDoPedido, item);

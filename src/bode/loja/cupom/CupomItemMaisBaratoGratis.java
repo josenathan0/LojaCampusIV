@@ -12,21 +12,20 @@ public class CupomItemMaisBaratoGratis implements CupomDescontoBode {
 
     @Override
     public double calcularDesconto(double valorOriginal, List<ItemPedido> itens) {
-
-        if (itens.size() >= 4) {
+        if (itens.size() >= 5) {
             double precoMaisBarato = Double.MAX_VALUE;
-            ItemPedido itemMaisBarato = null;
+            int indexMaisBarato = -1;
 
-            for (ItemPedido item : itens) {
-                double precoItem = item.getProduto().getPreco();
+            for (int i = 0; i < itens.size(); i++) {
+                double precoItem = itens.get(i).getProduto().getPreco();
                 if (precoItem < precoMaisBarato) {
                     precoMaisBarato = precoItem;
-                    itemMaisBarato = item;
+                    indexMaisBarato = i;
                 }
             }
 
-            if (itemMaisBarato != null) {
-                double desconto = itemMaisBarato.getSubtotal();
+            if (indexMaisBarato >= 0) {
+                double desconto = itens.get(indexMaisBarato).getSubtotal();
                 return valorOriginal - desconto;
             }
         }

@@ -1,7 +1,6 @@
 package bode.loja.cupom;
 
 import bode.loja.pedido.ItemPedido;
-
 import java.util.List;
 
 public interface CupomDescontoBode {

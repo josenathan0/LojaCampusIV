@@ -11,7 +11,6 @@ import bode.loja.pedido.ItemPedido;
 import bode.loja.pedido.Pedido;
 import bode.loja.pedido.StatusPedido;
 import bode.produtos.ProdutoDaLoja;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +20,9 @@ public class PedidoService {
     private List<Pedido> pedidos;
     private Queue<Pedido> filaPreparo;
     private int proximoNumeroPedido;
+    public static final int CUPOM_PAGUE3_LEVE4 = 1;
+    public static final int CUPOM_ITEM_MAIS_BARATO_GRATIS = 2;
+    public static final int CUPOM_SEM_DESCONTO = 3;
 
     public PedidoService() {
         this.pedidos = new ArrayList<>();
@@ -64,31 +66,45 @@ public class PedidoService {
         return false;
     }
 
-    public void aplicarCupom(int numeroPedido, TipoDeCupom tipoDeCupom) throws PedidoNaoExisteException {
+    public List<TipoDeCupom> getCuponsElegiveis(int numeroPedido) throws PedidoNaoExisteException {
         Pedido pedido = getPedido(numeroPedido);
         if (pedido != null) {
-            double valorOriginal = pedido.getValorTotal(); // Obter o valor original do pedido
+            List<TipoDeCupom> cuponsElegiveis = new ArrayList<>();
+            int numeroItens = pedido.getItens().size();
 
-            // Aplicar o desconto com base no tipo de cupom
-            double valorComDesconto = 0.0;
+            if (numeroItens >= 4) {
+                cuponsElegiveis.add(TipoDeCupom.PAGUE3_LEVE4);
+            }
+            if (numeroItens >= 5) {
+                cuponsElegiveis.add(TipoDeCupom.ITEM_MAIS_BARATO_GRATIS);
+            }
+
+            return cuponsElegiveis;
+        } else {
+            throw new PedidoNaoExisteException("Pedido com número " + numeroPedido + " não encontrado.");
+        }
+    }
+
+    public double aplicarCupom(int numeroPedido, TipoDeCupom tipoDeCupom) throws PedidoNaoExisteException {
+        Pedido pedido = getPedido(numeroPedido);
+        if (pedido != null) {
+            double valorOriginal = pedido.getValorTotal();
+            double valorComDesconto = valorOriginal;
+
             if (tipoDeCupom == TipoDeCupom.PAGUE3_LEVE4) {
                 CupomPague3ELeve4Bode cupom = new CupomPague3ELeve4Bode();
                 valorComDesconto = cupom.calcularDesconto(valorOriginal);
             } else if (tipoDeCupom == TipoDeCupom.ITEM_MAIS_BARATO_GRATIS) {
                 CupomItemMaisBaratoGratis cupom = new CupomItemMaisBaratoGratis();
                 valorComDesconto = cupom.calcularDesconto(valorOriginal, pedido.getItens());
-            } else if (tipoDeCupom == TipoDeCupom.SEM_DESCONTO) {
-                // Sem desconto
-                valorComDesconto = valorOriginal;
             }
 
             pedido.setValorTotal(valorComDesconto);
+            return valorComDesconto;
         } else {
             throw new PedidoNaoExisteException("Pedido com número " + numeroPedido + " não encontrado.");
         }
     }
-
-
     public void fecharPedido(int numeroPedido) throws PedidoNaoExisteException {
         Pedido pedido = getPedido(numeroPedido);
         if (pedido != null) {

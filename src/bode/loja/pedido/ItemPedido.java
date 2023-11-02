@@ -22,4 +22,6 @@ public class ItemPedido {
     public double getSubtotal() {
         return produto.getPreco() * quantidade;
     }
+
+
 }
