@@ -19,15 +19,6 @@ public class Pedido {
         this.valorTotal = 0.0;
         this.status = StatusPedido.AGUARDANDO_ITENS;
     }
-
-    public String getNomeCliente() {
-        return nomeCliente;
-    }
-
-    public Date getDataHoraCriacao() {
-        return dataHoraCriacao;
-    }
-
     public List<ItemPedido> getItens() {
         return itens;
     }
@@ -75,32 +66,6 @@ public class Pedido {
             }
         }
         return valorTotal;
-    }
-    public static List<Pedido> getPedidosEmAberto(List<Pedido> pedidos) {
-        List<Pedido> pedidosEmAberto = new ArrayList<>();
-        for (Pedido pedido : pedidos) {
-            if (pedido.getStatus() == StatusPedido.AGUARDANDO_ITENS) {
-                pedidosEmAberto.add(pedido);
-            }
-        }
-        return pedidosEmAberto;
-    }
-
-    public static List<Pedido> getPedidosCancelados(List<Pedido> pedidos) {
-        List<Pedido> pedidosCancelados = new ArrayList<>();
-        for (Pedido pedido : pedidos) {
-            if (pedido.getStatus() == StatusPedido.CANCELADO) {
-                pedidosCancelados.add(pedido);
-            }
-        }
-        return pedidosCancelados;
-    }
-    public void fechar() {
-        status = StatusPedido.FECHADO;
-    }
-
-    public void cancelar() {
-        status = StatusPedido.CANCELADO;
     }
 
     public void setNumeroPedido(int numeroPedido) {

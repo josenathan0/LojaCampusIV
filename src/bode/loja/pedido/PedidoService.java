@@ -8,10 +8,6 @@ import bode.loja.excecoes.NaoHaPedidosAPreparar;
 import bode.loja.excecoes.PedidoNaoEstaPreparadoException;
 import bode.loja.excecoes.PedidoNaoExisteException;
 import bode.produtos.ProdutoDaLoja;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
